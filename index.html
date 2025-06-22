@@ -63,6 +63,9 @@
       font-weight: bold;
       border-bottom: 1px solid #ccc;
       background-color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     .chat-body {
@@ -122,6 +125,14 @@
       cursor: pointer;
     }
 
+    .clear-btn {
+      font-size: 14px;
+      background: none;
+      border: none;
+      color: #4c8bf5;
+      cursor: pointer;
+    }
+
     @media (max-width: 768px) {
       .container {
         flex-direction: row;
@@ -148,27 +159,39 @@
     </div>
 
     <div class="chat">
-      <div class="chat-header">Chat</div>
+      <div class="chat-header">
+        Chat
+        <button class="clear-btn" onclick="clearChat()">Clear Chat</button>
+      </div>
       <div class="chat-body" id="chat"></div>
       <div class="chat-input">
-        <input id="input" type="text" placeholder="Type a message..." />
+        <input id="input" type="text" placeholder="Tulis pesan..." />
         <button onclick="sendMessage()">&#9658;</button>
       </div>
     </div>
   </div>
 
   <script>
+    const input = document.getElementById("input");
+    const chat = document.getElementById("chat");
+
+    // Ambil histori dari localStorage saat load
+    window.onload = function () {
+      const history = JSON.parse(localStorage.getItem("chatHistory")) || [];
+      history.forEach(msg => {
+        const el = document.createElement("div");
+        el.className = `message ${msg.sender}`;
+        el.textContent = msg.text;
+        chat.appendChild(el);
+      });
+      chat.scrollTop = chat.scrollHeight;
+    };
+
     async function sendMessage() {
-      const input = document.getElementById("input");
-      const chat = document.getElementById("chat");
       const question = input.value.trim();
       if (!question) return;
 
-      const userMsg = document.createElement("div");
-      userMsg.className = "message user";
-      userMsg.textContent = question;
-      chat.appendChild(userMsg);
-      chat.scrollTop = chat.scrollHeight;
+      addMessage("user", question);
       input.value = "";
 
       try {
@@ -177,20 +200,30 @@
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ prompt: question }),
         });
-        const data = await res.json();
 
-        const botMsg = document.createElement("div");
-        botMsg.className = "message bot";
-        botMsg.textContent = data.result || "⚠️ Jawaban tidak tersedia.";
-        chat.appendChild(botMsg);
-        chat.scrollTop = chat.scrollHeight;
+        const data = await res.json();
+        const reply = data.result || "⚠️ Jawaban tidak tersedia.";
+        addMessage("bot", reply);
       } catch (e) {
-        const botMsg = document.createElement("div");
-        botMsg.className = "message bot";
-        botMsg.textContent = "❌ Gagal menghubungi server.";
-        chat.appendChild(botMsg);
-        chat.scrollTop = chat.scrollHeight;
+        addMessage("bot", "❌ Gagal menghubungi server.");
       }
+    }
+
+    function addMessage(sender, text) {
+      const el = document.createElement("div");
+      el.className = `message ${sender}`;
+      el.textContent = text;
+      chat.appendChild(el);
+      chat.scrollTop = chat.scrollHeight;
+
+      const history = JSON.parse(localStorage.getItem("chatHistory")) || [];
+      history.push({ sender, text });
+      localStorage.setItem("chatHistory", JSON.stringify(history));
+    }
+
+    function clearChat() {
+      localStorage.removeItem("chatHistory");
+      chat.innerHTML = "";
     }
   </script>
 </body>
