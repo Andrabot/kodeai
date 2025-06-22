@@ -1,0 +1,39 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Chat AI</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    textarea, input { width: 100%; margin: 10px 0; }
+    #chat { white-space: pre-wrap; background: #f4f4f4; padding: 10px; border-radius: 5px; min-height: 150px; }
+  </style>
+</head>
+<body>
+  <h1>Chat AI</h1>
+  <div id="chat"></div>
+  <textarea id="input" rows="3" placeholder="Ketik pertanyaan..."></textarea>
+  <button onclick="sendMessage()">Kirim</button>
+
+  <script>
+    async function sendMessage() {
+      const input = document.getElementById("input");
+      const chat = document.getElementById("chat");
+      const question = input.value;
+      chat.innerText += "👤 " + question + "\n";
+      input.value = "";
+
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: question }),
+      });
+
+      const data = await res.json();
+      chat.innerText += "🤖 " + data.result + "\n";
+    }
+  </script>
+</body>
+</html>
+
