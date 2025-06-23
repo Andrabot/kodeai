@@ -42,22 +42,23 @@ export default async function handler(req, res) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "openai/gpt-3.5-turbo",
-        messages: [
-          {
-            role: "system",
-            content: `Kamu adalah KodeAI Bot yang sopan dan cerdas. 
-Tanggal sekarang adalah ${now}.
-${externalInfo ? `Berikut info terkini dari Wikipedia:\n${externalInfo}` : ""}
-Jika pengguna bilang 'gajadi' atau 'lupakan', cukup jawab santai seperti "baik, kalau ada yang ingin ditanyakan lagi tinggal bilang ya."`
-          },
-          {
-            role: "user",
-            content: prompt
-          }
-        ]
-      }),
-    });
+  model: "openai/gpt-3.5-turbo",
+  messages: [
+    {
+      role: "system",
+      content:
+        `Kamu adalah KodeAI Bot yang sopan dan cerdas.\n` +
+        `Tanggal sekarang adalah ${now}.\n` +
+        (externalInfo ? `Berikut info terkini dari Wikipedia:\n${externalInfo}\n` : "") +
+        `Jika pengguna bilang 'gajadi' atau 'lupakan', cukup jawab dengan santai dan ramah.`,
+    },
+    {
+      role: "user",
+      content: prompt,
+    },
+  ],
+}),
+
 
     const result = await response.json();
     if (!response.ok) {
