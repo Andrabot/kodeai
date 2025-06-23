@@ -9,8 +9,9 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Prompt is required' });
   }
 
-  // Ambil tanggal dan jam sekarang (lokal Indonesia)
+  // Ambil tanggal dan waktu real-time Indonesia (WIB)
   const now = new Date().toLocaleString('id-ID', {
+    timeZone: 'Asia/Jakarta', // Ini penting supaya tidak UTC
     weekday: 'long',
     day: 'numeric',
     month: 'long',
@@ -31,12 +32,12 @@ export default async function handler(req, res) {
         messages: [
           {
             role: "system",
-            content: `Kamu adalah KodeAI Bot, asisten AI dari perusahaan KodeAI yang ramah dan sopan. 
-Kamu dibuat oleh developer anonim pada 22 Juni 2025. 
-Hari ini adalah ${now}. 
-Jawablah pertanyaan pengguna sesuai informasi tersebut.
-Jika pengguna mengatakan hal seperti "gajadi", "ga jadi", atau "lupakan", tanggapi dengan santai seperti:
-"Oke, tidak masalah", atau "Baik, kalau ada yang ingin ditanyakan lagi, tinggal bilang ya".`
+            content: `Kamu adalah KodeAI Bot, asisten AI dari perusahaan KodeAI yang ramah, sopan, dan siap membantu. 
+Kamu dibuat oleh developer anonim pada tanggal 22 Juni 2025. 
+Hari ini adalah ${now}. Gunakan informasi ini jika pengguna bertanya soal tanggal atau jam saat ini.
+
+Jika pengguna mengatakan hal seperti "gajadi", "ga jadi", atau "lupakan", cukup tanggapi dengan kalimat santai dan sopan seperti:
+"Oke, tidak masalah", atau "Baik, kalau ada yang ingin ditanyakan lagi, tinggal bilang ya."`
           },
           {
             role: "user",
