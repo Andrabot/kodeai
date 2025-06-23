@@ -4,20 +4,34 @@ export default async function handler(req, res) {
   }
 
   const { prompt } = req.body;
-
   if (!prompt) {
     return res.status(400).json({ error: 'Prompt is required' });
   }
 
-  // Ambil tanggal dan waktu real-time Indonesia (WIB)
+  // Cek jika pertanyaan mengandung kata sensitif (contoh: presiden)
+  let externalInfo = "";
+  if (/presiden|menteri|indonesia|siapa/.test(prompt.toLowerCase())) {
+    try {
+      const query = "Presiden_Indonesia";
+      const wikiRes = await fetch(`https://id.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&titles=${query}&exintro=1&explaintext=1&origin=*`);
+      const wikiData = await wikiRes.json();
+      const page = Object.values(wikiData.query.pages)[0];
+      externalInfo = page.extract || "";
+    } catch (err) {
+      console.error("Wikipedia fetch error:", err);
+    }
+  }
+
+  // Ambil waktu real-time
   const now = new Date().toLocaleString('id-ID', {
-    timeZone: 'Asia/Jakarta', // Ini penting supaya tidak UTC
+    timeZone: 'Asia/Jakarta',
     weekday: 'long',
     day: 'numeric',
     month: 'long',
     year: 'numeric',
     hour: '2-digit',
-    minute: '2-digit'
+    minute: '2-digit',
+    second: '2-digit'
   });
 
   try {
@@ -32,12 +46,10 @@ export default async function handler(req, res) {
         messages: [
           {
             role: "system",
-            content: `Kamu adalah KodeAI Bot, asisten AI dari perusahaan KodeAI yang ramah, sopan, dan siap membantu. 
-Kamu dibuat oleh developer anonim pada tanggal 22 Juni 2025. 
-Hari ini adalah ${now}. Gunakan informasi ini jika pengguna bertanya soal tanggal atau jam saat ini.
-
-Jika pengguna mengatakan hal seperti "gajadi", "ga jadi", atau "lupakan", cukup tanggapi dengan kalimat santai dan sopan seperti:
-"Oke, tidak masalah", atau "Baik, kalau ada yang ingin ditanyakan lagi, tinggal bilang ya."`
+            content: `Kamu adalah KodeAI Bot yang sopan dan cerdas. 
+Tanggal sekarang adalah ${now}.
+${externalInfo ? `Berikut info terkini dari Wikipedia:\n${externalInfo}` : ""}
+Jika pengguna bilang 'gajadi' atau 'lupakan', cukup jawab santai seperti "baik, kalau ada yang ingin ditanyakan lagi tinggal bilang ya."`
           },
           {
             role: "user",
@@ -48,14 +60,13 @@ Jika pengguna mengatakan hal seperti "gajadi", "ga jadi", atau "lupakan", cukup 
     });
 
     const result = await response.json();
-
     if (!response.ok) {
-      return res.status(response.status).json({ error: result.error || 'Unknown error from OpenRouter' });
+      return res.status(response.status).json({ error: result.error || 'Unknown error' });
     }
 
     res.status(200).json({ result: result.choices[0].message.content });
-  } catch (error) {
-    console.error("OpenRouter Error:", error);
+  } catch (err) {
+    console.error("OpenRouter Error:", err);
     res.status(500).json({ error: "Internal Server Error" });
   }
 }
