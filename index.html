@@ -284,6 +284,13 @@
         min-width: 100vw;
       }
     }
+    
+    @keyframes swipeLeft {
+  0% { transform: translateX(0); opacity: 1; }
+  50% { transform: translateX(-40px); opacity: 0.8; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
   </style>
 </head>
 <body>
@@ -378,7 +385,7 @@
 
   <h2 style="margin-top: 30px; font-size: 20px; color: #2e4a75;">Tentang Developer</h2>
   <div style="margin-top: 10px; font-size: 15px; color: #444; line-height: 1.6;">
-    Aplikasi ini dikembangkan oleh <strong>Crostia Developer</strong> sebagai proyek independen untuk memberikan kemudahan akses AI ke semua kalangan.
+    Aplikasi ini dikembangkan oleh <strong>Kodeai Developer</strong> sebagai proyek independen untuk memberikan kemudahan akses AI ke semua kalangan.
   </div>
 
   <h2 style="margin-top: 30px; font-size: 20px; color: #2e4a75;">Kontak & Media Sosial</h2>
@@ -401,6 +408,18 @@
   <div style="margin-top: 10px; font-size: 14px; color: #666;">
     © 2025 KodeAI. Seluruh hak cipta dilindungi. Konten percakapan tidak disimpan di server dan hanya tersimpan di perangkat pengguna.
   </div>
+</div>
+<div id="swipeHint" style="
+  position: fixed;
+  bottom: 400px;
+  left: 95%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  pointer-events: none;
+">
+<img src="swipe.png" alt="Swipe Hint"
+     style="width: 80px; animation: swipeLeft 1.5s infinite;">
+
 </div>
 
 
@@ -517,6 +536,19 @@
         settingsPage.style.display = text === "settings" ? "block" : "none";
       });
     });
+    
+    const swipeHint = document.getElementById("swipeHint");
+
+// Sembunyikan otomatis setelah 4 detik
+setTimeout(() => {
+  swipeHint.style.display = "none";
+}, 10000);
+
+// Atau sembunyikan saat disentuh / digeser
+document.addEventListener("touchstart", () => {
+  swipeHint.style.display = "none";
+}, { once: true });
+
   </script>
 </body>
 </html>
