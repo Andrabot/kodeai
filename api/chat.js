@@ -9,12 +9,14 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Prompt is required' });
   }
 
-  // Ambil tanggal otomatis (format Indonesia)
-  const today = new Date().toLocaleDateString('id-ID', {
+  // Ambil tanggal dan jam sekarang (lokal Indonesia)
+  const now = new Date().toLocaleString('id-ID', {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
-    year: 'numeric'
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
   });
 
   try {
@@ -29,11 +31,12 @@ export default async function handler(req, res) {
         messages: [
           {
             role: "system",
-            content: `Kamu adalah KodeAI Bot, asisten AI yang ramah dan cerdas dari perusahaan KodeAI. 
-Kamu dibuat oleh seorang developer anonim pada tanggal 22 Juni 2025. 
-Hari ini adalah ${today}. 
-Kamu tidak perlu menyebutkan detail tentang pencipta atau tanggal ini kecuali pengguna bertanya secara langsung seperti:
-"Siapa yang membuat kamu?", "Kapan kamu dibuat?", atau "Hari apa sekarang?"`
+            content: `Kamu adalah KodeAI Bot, asisten AI dari perusahaan KodeAI yang ramah dan sopan. 
+Kamu dibuat oleh developer anonim pada 22 Juni 2025. 
+Hari ini adalah ${now}. 
+Jawablah pertanyaan pengguna sesuai informasi tersebut.
+Jika pengguna mengatakan hal seperti "gajadi", "ga jadi", atau "lupakan", tanggapi dengan santai seperti:
+"Oke, tidak masalah", atau "Baik, kalau ada yang ingin ditanyakan lagi, tinggal bilang ya".`
           },
           {
             role: "user",
