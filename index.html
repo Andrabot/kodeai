@@ -5,8 +5,7 @@
   <title>KodeAI</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="/icon.png?v=1" type="image/png" />
-<link rel="shortcut icon" href="/icon.png?v=1" type="image/png" />
-
+  <link rel="shortcut icon" href="/icon.png?v=1" type="image/png" />
 
   <style>
     * {
@@ -185,6 +184,39 @@
       cursor: pointer;
     }
 
+    .quick-btn {
+  padding: 10px 16px;
+  background-color: #4c8bf5;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  min-width: 160px; /* biar responsif */
+  flex: 1 1 auto;
+  max-width: calc(100% - 10px);
+  text-align: center;
+}
+
+    .quick-btn:hover {
+      background-color: #3a76dd;
+    }
+
+    #quickPrompts {
+  margin: 0 20px 10px 60px;
+  transform: translateY(-270px);
+  display: none;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 10px 15px;
+  align-items: flex-start;
+}
+
+#quickPrompts button:nth-child(n+4) {
+  margin-left: 30px; /* baris kedua lebih ke kanan */
+}
+
+
     .dashboard, .settings {
       background-color: #ffffff;
       padding: 20px;
@@ -289,6 +321,13 @@
         </div>
       </div>
       <div class="chat-body" id="chat"></div>
+      <div id="quickPrompts">
+        <div style="font-weight: bold; color: #555;">💡 Apa Yang Anda Inginkan Saat Ini? :</div>
+        <button onclick="usePrompt('Buat caption Instagram')" class="quick-btn">Buat caption Instagram</button>
+        <button onclick="usePrompt('Ceritakan dongeng anak')" class="quick-btn">Ceritakan dongeng anak</button>
+        <button onclick="usePrompt('Beri ide bisnis kreatif')" class="quick-btn">Beri ide bisnis kreatif</button>
+        <button onclick="usePrompt('Tanya soal matematika')" class="quick-btn">Tanya soal matematika</button>
+      </div>
       <div class="chat-input">
         <input id="input" type="text" placeholder="Tulis pesan..." />
         <button onclick="sendMessage()">&#9658;</button>
@@ -296,31 +335,74 @@
     </div>
 
     <!-- Dashboard Section -->
-    <div class="dashboard">
-      <h1 style="font-size: 28px; margin-bottom: 20px; color: #2e4a75;">Tentang KodeAI</h1>
-      <p style="font-size: 16px; line-height: 1.6; color: #333;">
-        <strong>KodeAI</strong> adalah platform <em>chat AI berbasis web</em> yang dirancang untuk membantu kamu dalam berinteraksi dengan kecerdasan buatan.
-      </p>
-      <ul style="margin-top: 20px; color: #444;">
-        <li>💬 Chat AI cerdas dan cepat tanggap</li>
-        <li>📱 Tampilan modern & responsif</li>
-        <li>💾 Simpan otomatis riwayat chat di browser</li>
-        <li>🔒 Data kamu aman dan privat</li>
-      </ul>
-    </div>
+<div class="dashboard">
+  <h1 style="font-size: 28px; margin-bottom: 20px; color: #2e4a75;">Tentang KodeAI</h1>
+  <p style="font-size: 16px; line-height: 1.6; color: #333;">
+    <strong>KodeAI</strong> adalah aplikasi <em>chat AI berbasis web</em> yang dirancang untuk membantu kamu berinteraksi dengan kecerdasan buatan secara mudah, cepat, dan nyaman.
+  </p>
 
-    <!-- Settings Section -->
-    <div class="settings">
-      <h1 style="color:#2e4a75;">Pengaturan</h1>
-      <div class="setting-item">
-        <span>Aktifkan suara (TTS)</span>
-        <label class="switch">
-          <input type="checkbox" id="ttsToggle">
-          <span class="slider"></span>
-        </label>
-      </div>
-    </div>
+  <ul style="margin-top: 20px; color: #444; font-size: 15px; line-height: 1.7;">
+    <li>💬 Chat AI cerdas dan cepat tanggap</li>
+    <li>📲 Tampilan modern & responsif di semua perangkat</li>
+    <li>💡 Quick Prompts untuk memulai percakapan instan</li>
+    <li>🗣️ Suara AI yang bisa membacakan jawaban untukmu</li>
+    <li>🧽 Clear Chat untuk menghapus percakapan dengan satu klik</li>
+    <li>💾 Simpan otomatis riwayat chat di browser</li>
+    <li>🔒 Data kamu aman dan tidak disimpan di server</li>
+  </ul>
+
+  <p style="margin-top: 25px; font-size: 16px; line-height: 1.6; color: #333;">
+    Aplikasi ini dirancang agar tetap ringan digunakan di HP maupun laptop, tanpa perlu login atau pendaftaran. Cocok untuk siapa saja yang ingin mencoba AI dengan antarmuka sederhana namun tetap fungsional.
+  </p>
+</div>
+
+
+<div class="settings">
+  <h1 style="color:#2e4a75;">Pengaturan</h1>
+
+  <div class="setting-item">
+    <span>Aktifkan suara (TTS)</span>
+    <label class="switch">
+      <input type="checkbox" id="ttsToggle">
+      <span class="slider"></span>
+    </label>
   </div>
+
+  <div class="setting-item">
+    <span>Mode hemat data (segera hadir)</span>
+    <label class="switch">
+      <input type="checkbox" disabled>
+      <span class="slider"></span>
+    </label>
+  </div>
+
+  <h2 style="margin-top: 30px; font-size: 20px; color: #2e4a75;">Tentang Developer</h2>
+  <div style="margin-top: 10px; font-size: 15px; color: #444; line-height: 1.6;">
+    Aplikasi ini dikembangkan oleh <strong>Crostia Developer</strong> sebagai proyek independen untuk memberikan kemudahan akses AI ke semua kalangan.
+  </div>
+
+  <h2 style="margin-top: 30px; font-size: 20px; color: #2e4a75;">Kontak & Media Sosial</h2>
+  <ul style="list-style: none; padding-left: 0; margin-top: 10px; font-size: 15px;">
+    <li style="margin-bottom: 10px;">
+      <img src="https://cdn-icons-png.flaticon.com/512/3046/3046120.png" alt="TikTok" style="width: 20px; vertical-align: middle; margin-right: 8px;">
+      <a href="https://www.tiktok.com/@kode.ai.dev" target="_blank" style="color:#4c8bf5; text-decoration:none;">@kode.ai.dev</a>
+    </li>
+    <li style="margin-bottom: 10px;">
+      <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp" style="width: 20px; vertical-align: middle; margin-right: 8px;">
+      <a href="https://wa.me/6287886399211" target="_blank" style="color:#4c8bf5; text-decoration:none;">+62 878-8639-9211</a>
+    </li>
+    <li>
+      <img src="https://cdn-icons-png.flaticon.com/512/561/561127.png" alt="Email" style="width: 20px; vertical-align: middle; margin-right: 8px;">
+      <a href="mailto:kontak@kodeai.dev" style="color:#4c8bf5; text-decoration:none;">kontak@kodeai.dev</a>
+    </li>
+  </ul>
+
+  <h2 style="margin-top: 30px; font-size: 20px; color: #2e4a75;">Hak Cipta</h2>
+  <div style="margin-top: 10px; font-size: 14px; color: #666;">
+    © 2025 KodeAI. Seluruh hak cipta dilindungi. Konten percakapan tidak disimpan di server dan hanya tersimpan di perangkat pengguna.
+  </div>
+</div>
+
 
   <script>
     const input = document.getElementById("input");
@@ -330,6 +412,7 @@
     const dashboardPage = document.querySelector(".dashboard");
     const settingsPage = document.querySelector(".settings");
     const voiceStatus = document.getElementById("voiceStatus");
+    const quickPrompts = document.getElementById("quickPrompts");
 
     let ttsEnabled = JSON.parse(localStorage.getItem("ttsEnabled")) ?? true;
 
@@ -338,6 +421,11 @@
       utterance.lang = "id-ID";
       utterance.rate = 1;
       speechSynthesis.speak(utterance);
+    }
+
+    function usePrompt(promptText) {
+      input.value = promptText;
+      sendMessage();
     }
 
     window.onload = function () {
@@ -355,6 +443,10 @@
           chat.appendChild(el);
         });
         chat.scrollTop = chat.scrollHeight;
+
+        if (history.length === 0) {
+          quickPrompts.style.display = "flex";
+        }
 
         const toggle = document.getElementById("ttsToggle");
         toggle.checked = ttsEnabled;
@@ -391,6 +483,7 @@
     }
 
     function addMessage(sender, text) {
+      quickPrompts.style.display = "none";
       const el = document.createElement("div");
       el.className = `message ${sender}`;
       el.textContent = text;
@@ -405,6 +498,7 @@
     function clearChat() {
       localStorage.removeItem("chatHistory");
       chat.innerHTML = "";
+      quickPrompts.style.display = "flex";
     }
 
     input.addEventListener("keydown", function (e) {
