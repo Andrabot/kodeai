@@ -13,7 +13,7 @@ export default async function handler(req, res) {
   if (/presiden|menteri|indonesia|siapa/.test(prompt.toLowerCase())) {
     try {
       const query = "Presiden_Indonesia";
-      const wikiRes = await fetch(`https://id.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&titles=${query}&exintro=1&explaintext=1&origin=*`);
+      const wikiRes = await fetch(`https://id.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&titles=${query}&explaintext=1&origin=*`);
       const wikiData = await wikiRes.json();
       const page = Object.values(wikiData.query.pages)[0];
       externalInfo = page.extract || "";
@@ -22,7 +22,7 @@ export default async function handler(req, res) {
     }
   }
 
-  // Ambil waktu real-time
+  // Ambil waktu real-time (Asia/Jakarta)
   const now = new Date().toLocaleString('id-ID', {
     timeZone: 'Asia/Jakarta',
     weekday: 'long',
@@ -31,7 +31,7 @@ export default async function handler(req, res) {
     year: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
-    second: '2-digit'
+    second: '2-digit',
   });
 
   try {
@@ -42,23 +42,23 @@ export default async function handler(req, res) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-  model: "openai/gpt-3.5-turbo",
-  messages: [
-    {
-      role: "system",
-      content:
-        `Kamu adalah KodeAI Bot yang sopan dan cerdas.\n` +
-        `Tanggal sekarang adalah ${now}.\n` +
-        (externalInfo ? `Berikut info terkini dari Wikipedia:\n${externalInfo}\n` : "") +
-        `Jika pengguna bilang 'gajadi' atau 'lupakan', cukup jawab dengan santai dan ramah.`,
-    },
-    {
-      role: "user",
-      content: prompt,
-    },
-  ],
-}),
-
+        model: "openai/gpt-3.5-turbo",
+        messages: [
+          {
+            role: "system",
+            content:
+              `Kamu adalah KodeAI Bot yang sopan dan cerdas.\n` +
+              `Tanggal sekarang adalah ${now}.\n` +
+              (externalInfo ? `Berikut info terkini dari Wikipedia:\n${externalInfo}\n` : "") +
+              `Jika pengguna bilang 'gajadi' atau 'lupakan', cukup jawab dengan santai dan ramah.`,
+          },
+          {
+            role: "user",
+            content: prompt,
+          },
+        ],
+      }),
+    });
 
     const result = await response.json();
     if (!response.ok) {
